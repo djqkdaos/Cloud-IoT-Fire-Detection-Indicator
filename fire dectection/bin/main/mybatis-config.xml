@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  <typeAliases>
+		<typeAlias type="org.firedetection.biz.users.vo.UserVO" alias="UserVO"></typeAlias>
+		<typeAlias type="org.firedetection.biz.users.vo.EducationalLevelVO" alias="EducationalLevelVO"></typeAlias>
+		<typeAlias type="org.firedetection.biz.users.vo.CareerVO" alias="CareerVO"></typeAlias>
+		<typeAlias type="org.firedetection.biz.users.vo.JobVO" alias="JobVO"></typeAlias>
+		<typeAlias type="org.firedetection.biz.users.vo.MailVO" alias="MailVO"></typeAlias>
+		<typeAlias type="org.firedetection.biz.users.vo.CertificateVO" alias="CertificateVO"></typeAlias>
+		<typeAlias type="org.firedetection.biz.board.vo.CsBoardVO" alias="CsBoardVO"></typeAlias>
+		<typeAlias type="org.firedetection.biz.board.vo.FreeBoardVO" alias="FreeBoardVO"></typeAlias>
+		<typeAlias type="org.firedetection.biz.board.vo.QnaBoardVO" alias="QnaBoardVO"></typeAlias>
+		<typeAlias type="org.firedetection.biz.board.vo.MentorBoardVO" alias="MentorBoardVO"></typeAlias>
+		<typeAlias type="org.firedetection.biz.board.vo.FileGroupVO" alias="FileGroupVO"></typeAlias>
+		<typeAlias type="org.firedetection.biz.board.vo.FilesVO" alias="FilesVO"></typeAlias>
+		<typeAlias type="org.firedetection.biz.board.vo.ReplyVO" alias="ReplyVO"></typeAlias>
+		<typeAlias type="org.firedetection.biz.board.vo.MenteeBoardVO" alias="MenteeBoardVO"></typeAlias>
+		<typeAlias type="org.firedetection.biz.raspberry.vo.FireLogVo" alias="FireLogVo"></typeAlias>
+		<typeAlias type="org.firedetection.biz.raspberry.vo.RaspbVo" alias="RaspbVo"></typeAlias>
+		<typeAlias type="org.firedetection.biz.raspberry.vo.SensorVo" alias="SensorVo"></typeAlias>
+		<typeAlias type="org.firedetection.biz.raspberry.vo.FireLogDataVo" alias="FireLogDataVo"></typeAlias>
+		<typeAlias type="org.firedetection.biz.raspberry.vo.MonitorVo" alias="MonitorVo"></typeAlias>
+		<typeAlias type="org.firedetection.biz.board.vo.FileNameVo" alias="FileNameVo"></typeAlias>
+		<typeAlias type="org.firedetection.biz.board.vo.FileListVO" alias="FileListVO"></typeAlias>
+		<typeAlias type="org.firedetection.biz.board.vo.Greeting" alias="Greeting"></typeAlias>
+	</typeAliases>
+
+	<mappers>
+		<mapper resource="./mappers/UserMapper.xml" />
+		<mapper resource="./mappers/FreeBoardMapper.xml" />
+		<mapper resource="./mappers/CsBoardMapper.xml" />
+		<mapper resource="./mappers/MentorBoardMapper.xml" />
+		<mapper resource="./mappers/CsBoardMapper.xml" />
+		<mapper resource="./mappers/FileMapper.xml" />
+		<mapper resource="./mappers/EducationalLevelMapper.xml" />
+		<mapper resource="./mappers/ProfileMapper.xml" />
+		<mapper resource="./mappers/MailMapper.xml" />
+		<mapper resource="./mappers/ReplyMapper.xml" />
+		<mapper resource="./mappers/MenteeBoardMapper.xml"/>
+		<mapper resource="./mappers/RaspberryMapper.xml"/>
+	</mappers>
+</configuration>

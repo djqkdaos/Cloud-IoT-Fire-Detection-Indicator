@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="QNABOARDMapper">
+	<select id="scPrevfb_num" parameterType="HashMap" resultType="int">
+		<![CDATA[
+			SELECT IFNULL(MAX(fb_num), -1) FROM QNABOARD WHERE ${condition} LIKE '%' #{search} '%' and fb_num < #{fb_num};
+		]]>
+	</select>
+	
+	<select id="scNextfb_num" parameterType="HashMap" resultType="int">
+		<![CDATA[
+			SELECT IFNULL(MIN(fb_num), -1) FROM QNABOARD WHERE ${condition} LIKE '%' #{search} '%' and fb_num > #{fb_num};
+		]]>
+	</select>
+	
+	<select id="scBoardList" parameterType="HashMap" resultType="QnaBoardVO">
+		SELECT * 
+		FROM (
+			SELECT * 
+			FROM QNABOARD
+			WHERE ${condition} LIKE '%' #{search} '%'
+			LIMIT #{offset}, #{limit}
+		) A ORDER BY fb_num DESC
+	</select>
+	
+	<select id="scCountBoards" parameterType="HashMap" resultType="int">
+		SELECT COUNT(*) FROM QNABOARD WHERE ${condition} LIKE '%' #{search} '%'
+	</select>
+	
+	<select id="prevfb_num" parameterType="int" resultType="int">
+		<![CDATA[
+			SELECT IFNULL(MAX(fb_num), -1) FROM QNABOARD WHERE fb_num < #{fb_num};
+		]]>
+	</select>
+	<select id="nextfb_num" parameterType="int" resultType="int">
+		<![CDATA[
+			SELECT IFNULL(MIN(fb_num), -1) FROM QNABOARD WHERE fb_num > #{fb_num};
+		]]>
+	</select>
+
+	<select id="boardList" parameterType="HashMap" resultType="QnaBoardVO">
+		SELECT * 
+		FROM (
+			SELECT * 
+			FROM QNABOARD
+			LIMIT #{offset}, #{limit}
+		) A ORDER BY fb_num DESC
+	</select>
+	
+	<select id="countBoards" resultType="int">
+		SELECT COUNT(*) FROM QNABOARD
+	</select>
+	
+	<select id="viewBoard" parameterType="int" resultType="QnaBoardVO">
+		SELECT * FROM QNABOARD WHERE fb_num = #{fb_num}
+	</select>
+	
+	<select id="findBoard" parameterType="QnaBoardVO" resultType="int">
+		SELECT IFNULL(max(fb_num),0) FROM QNABOARD WHERE title = #{title} AND content = #{content} AND id = #{id}
+	</select>
+
+	<insert id="insertQNABOARD" parameterType="QnaBoardVO">
+		INSERT INTO QNABOARD (fb_num, title, content, regDate, hit, id)
+		VALUES((SELECT IFNULL(max(f.fb_num),0)+1 FROM QNABOARD f), #{title}, #{content}, #{regDate}, #{hit}, #{id})
+	</insert>
+	
+	<update id="modifyQNABOARD" parameterType="QnaBoardVO">
+		UPDATE QNABOARD SET title = #{title} WHERE fb_num = #{fb_num};
+		UPDATE QNABOARD SET content = #{content} WHERE fb_num = #{fb_num};
+	</update>
+	
+	<update id="countUp" parameterType="int">
+		UPDATE QNABOARD SET hit = hit + 1 WHERE fb_num = #{fb_num}
+	</update>
+
+	<delete id="deleteQNABOARD">
+		DELETE FROM QNABOARD WHERE fb_num = #{fb_num}
+	</delete>
+</mapper>

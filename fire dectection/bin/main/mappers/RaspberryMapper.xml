@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="RaspberryMapper">
+	<insert id="insertFireData" parameterType="FireLogVo">
+		INSERT INTO DETECTIONLOG (R_UUID, S_UUID, DATE, STATUS, VOLT)
+		VALUES(#{r_uuid}, #{s_uuid}, #{date}, #{status}, #{volt})
+	</insert>
+	<insert id="insertRaspberry" parameterType="RaspbVo">
+		INSERT INTO RASPB (UUID, IPADDR, DETECTION_CNT, USERID)
+		VALUES(#{uuid}, #{ipaddr}, #{detection_cnt}, #{userid})
+	</insert>
+	<insert id="insertRaspberrySensor" parameterType="SensorVo">
+		INSERT INTO DETECTION (R_UUID, S_UUID)
+		VALUES(#{r_uuid}, #{s_uuid})
+	</insert>
+	<select id="selectS_uuid" resultType="String">
+		SELECT S_UUID FROM DETECTION D, RASPB R WHERE R.UUID = D.R_UUID AND USERID = #{id} AND SUB_NUM = 0
+	</select>
+	<select id="selectFileNames" resultType="FileNameVo">
+		SELECT N.HASH,N.OLD_NAME,N.NEW_NAME FROM FILESNAME N, FILES F WHERE F.USER_ID = #{id} AND F.FILEHASH = N.HASH;
+	</select>
+	<update id="updateSensorPosition" parameterType="SenSorVo">
+		UPDATE DETECTION SET X = #{x}, Y = #{y}, FLOOR = #{floor} WHERE S_UUID = #{s_uuid} AND SUB_NUM = #{sub_num};
+	</update>
+	<select id="selectSensorSubnum" parameterType="SensorVo" resultType="int">
+		SELECT COUNT(S_UUID) FROM DETECTION WHERE S_UUID = #{s_uuid} AND SUB_NUM = #{sub_num}
+	</select>
+	
+	<select id="selectSensor" parameterType="String" resultType="SensorVo">
+		SELECT S_UUID, FLOOR, R_UUID FROM DETECTION WHERE S_UUID=#{s_uuid} AND SUB_NUM = 0
+	</select>
+	
+	<insert id="insertRaspberrySensorSubnum" parameterType="SensorVo">
+		INSERT INTO DETECTION (R_UUID, S_UUID, SUB_NUM, FLOOR)
+		VALUES(#{r_uuid}, #{s_uuid}, #{sub_num}, #{floor})
+	</insert>
+	
+	<select id="selectFloor" resultType="SensorVo" parameterType="String">
+		SELECT * FROM DETECTION WHERE FLOOR = #{floor}
+	</select>
+	
+	<select id="selectfirelog" resultType="FireLogDataVo">
+		SELECT * FROM FIRELOG;
+	</select>
+	<select id="selectfirelogOne" resultType="FireLogDataVo">
+		SELECT * FROM FIRELOG ORDER BY IDX DESC LIMIT 1;
+	</select>
+	
+	<select id="selectmyfirelog" resultType="FireLogDataVo" parameterType="HashMap">
+		SELECT F.IDX, F.FIREDATE, R_UUID, S_UUID, ADDRESS, STATUS FROM FIRELOG F, RASPB R WHERE R_UUID = UUID AND USERID = #{user_id} AND STATUS != 'nomal';
+	</select>
+	
+	<insert id="insertfirelog" parameterType="FireLogDataVo">
+		INSERT INTO FIRELOG (R_UUID, S_UUID, STATUS) VALUES(#{r_uuid}, #{s_uuid}, #{status})
+	</insert>
+	
+	<select id="selectnewfirelog" resultType="FireLogDataVo">
+		SELECT * FROM FIRELOG ORDER BY IDX DESC LIMIT 10;
+	</select>
+	
+	<select id="selectfirelogDate" parameterType="FireLogDataVo" resultType="int">
+		SELECT COUNT(*) FROM FIRELOG WHERE S_UUID = #{s_uuid} AND STATUS = #{status} AND FIREDATE >= DATE_ADD(NOW(), INTERVAL -30 MINUTE)
+	</select>
+	
+	<select id="selectnoticeFire" parameterType="Greeting" resultType="Greeting">
+		SELECT FL.FIREDATE, FL.S_UUID, R.ADDRESS, FL.STATUS, D.FLOOR, FN.NEW_NAME
+		FROM FIRELOG FL, RASPB R, DETECTION D, FILESNAME FN
+		WHERE D.S_UUID = #{s_uuid} AND FN.OLD_NAME = #{old_name} AND FN.HASH = #{hash} AND FL.S_UUID = D.S_UUID AND 
+		R.UUID = (SELECT R_UUID FROM FIRELOG WHERE S_UUID = #{s_uuid} ORDER BY IDX DESC LIMIT 1) ORDER BY FL.FIREDATE DESC LIMIT 1;
+	</select>
+	
+	<select id="selectnoticeFireALL" parameterType="Greeting" resultType="Greeting">
+		SELECT FL.FIREDATE, FL.S_UUID, R.ADDRESS, FL.STATUS, D.FLOOR, FN.NEW_NAME
+		FROM FIRELOG FL, RASPB R, DETECTION D, FILESNAME FN
+		WHERE D.S_UUID = #{s_uuid} AND FN.OLD_NAME = #{old_name} AND FN.HASH = #{hash} AND FL.S_UUID = D.S_UUID AND 
+		R.UUID = (SELECT R_UUID FROM FIRELOG WHERE S_UUID = #{s_uuid} ORDER BY IDX DESC LIMIT 1) AND FIREDATE >= DATE_ADD(NOW(), INTERVAL -30 DAY)
+	</select>
+	
+	<select id="selectDetectionSuuid" parameterType="String" resultType="SensorVo">
+		SELECT FLOOR FROM detection WHERE S_UUID = #{s_uuid} AND SUB_NUM = 0
+	</select>
+	
+	<select id="selectMonitorMonthVolt" resultType="MonitorVo">
+		SELECT VOLT, S_UUID, DATE FROM DETECTIONLOG WHERE R_UUID = '1a62e662-31a9-4885-9a4f-8aefcea9e34d' AND DATE >= DATE_ADD(NOW(), INTERVAL -30 DAY) GROUP BY DATE, S_UUID ORDER BY DATE ASC;
+	</select>
+	
+	<select id="selectMonitorNowVolt" resultType="MonitorVo">
+		SELECT VOLT, S_UUID FROM DETECTIONLOG WHERE R_UUID = '1a62e662-31a9-4885-9a4f-8aefcea9e34d' ORDER BY LOG_IDX DESC LIMIT 3;
+	</select>
+</mapper>
