@@ -16,12 +16,12 @@
  - Push-Alarm function in case of fire
 
 ### [Conceptual diagram]
-![개념도](/image/image7.png)
+![개념도](image/image7.png)
 
 ### [a structural chart]
-![구조도](/image/image8.png)
-![구조도](/image/image13.png)
+![구조도](image/image8.png)
+![구조도](image/image13.png)
 
 ### [Result photo]
-![작품사진](/image/image10.png)
-![작품사진](/image/image12.png)
+![작품사진](image/image10.png)
+![작품사진](image/image12.png)
